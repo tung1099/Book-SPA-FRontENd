@@ -37,7 +37,7 @@ function createCate() {
         type: "POST",
         data: JSON.stringify(newCate),
         //tên API
-        url: "http://localhost:8080/category",
+        url: `http://localhost:8080/category`,
         //xử lý khi thành công
         success: function (){
             showListCate()
@@ -56,10 +56,10 @@ function deleteCate(id){
     })
 }
 
-function editCate(){
+function editCate(id){
     // lay du lieu
     let name = $('#name1').val();
-    let description = $('#description').val();
+    let description = $('#description1').val();
     let newCate = {
         name: name,
         description: description,
@@ -74,7 +74,7 @@ function editCate(){
         type: "PUT",
         data: JSON.stringify(newCate),
         //tên API
-        url: "http://localhost:8080/category/edit/{id}",
+        url: `http://localhost:8080/category/edit/${id}`,
         //xử lý khi thành công
         success: function (){
             showListCate()
@@ -83,7 +83,7 @@ function editCate(){
     event.preventDefault();
 }
 
-function showEditFormCate(){
+function showEditFormCate(id){
     let content = `<div class="container mt-3">
                     <form>
                         <div class="mb-3">
@@ -91,8 +91,8 @@ function showEditFormCate(){
                             <input type="text" class="form-control" id="name1" >
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description" >
+                            <label for="description1" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description1" >
                         </div>
                        
                         <div class="modal-footer">
@@ -104,10 +104,10 @@ function showEditFormCate(){
     $("#showModalEdit").html(content);
     $.ajax({
         type:"GET",
-        url:`http://localhost:8080/category/edit/${id}`,
+        url:`http://localhost:8080/category/${id}`,
         success:function (cate){
             $('#name1').val(cate.name)
-            $('#description').val(cate.description)
+            $('#description1').val(cate.description)
         }
     })
 }
