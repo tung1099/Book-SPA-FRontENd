@@ -16,12 +16,18 @@
             font-family: cursive;font-size: 22px;
         }
     </style>
+
 </head>
 <body>
 <div class="container">
     <h1 style="color: black; background: burlywood" >Book Manager</h1>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Add Book</button>
 
+    <form>
+        <p></p>
+        <input id="q" type="text"/>
+        <input type="submit" onclick="findByName(0)" value="Search"/>
+    </form>
     <!-- The Modal-->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -110,13 +116,24 @@
 
             <!-- Modal footer -->
 
-
         </div>
     </div>
 </div>
 
+
+
+<div class="container">
+
+    <div style="text-align: center" id="iconPage"></div>
+
+    <p>Danh sách thể loại:
+        <a href="category.html">Click me</a>
+    </p>
+</div>
+
 <script src="myjs.js"></script>
-<a href="category.html">Click me</a>
+
+
 </body>
 
 </html>

@@ -1,8 +1,9 @@
-function showList(){
+function showList(page){
     $.ajax({
         type:"GET",
-        url:"http://localhost:8080/book",
-        success: function (books){
+        url:`http://localhost:8080/book?page=${page}`,
+        success: function (data){
+            let books = data.content;
             let content = '';
             for (let i = 0; i < books.length; i++) {
                 content += `<tr>
@@ -14,20 +15,88 @@ function showList(){
         <td>${books[i].category.name}</td>
         <td><button onclick="deleteBook(${books[i].id})">Delete</button></td>
         <td><button type="button" onclick="showEditForm(${books[i].id})" data-bs-toggle="modal" data-bs-target="#myModal1">Update</button></td>
-    </tr>`
+        </tr>`
             }
             $("#list-book").html(content);
+
+            let iconPage = `<button id="first" onclick="showList(0)"><i class="fa-solid fa-backward-fast">First</i></button> 
+                <button  id="backup" onclick="showList(${data.pageable.pageNumber} - 1)"><i class ="fa-solid fa-backward-step">Back</i></button>
+                      <span> Trang </span> <span>${data.pageable.pageNumber +1 }/ ${data.totalPages}</span>
+                      <button id="next" onclick="showList(${data.pageable.pageNumber}+1)" ><i class="fa-solid fa-forward-step">Next</i></button>
+                        <button id="last" onclick="showList(${data.totalPages} -1)"><i class="fa-solid fa-forward-fast">Last</i></button>`
+            $(`#iconPage`).html(iconPage);
+            if (data.pageable.pageNumber === 0) {
+                document.getElementById("backup").hidden = true
+                document.getElementById("first").hidden = true
+
+            }
+
+            if (data.totalPages ===0 ) {
+                document.getElementById("backup").hidden = true
+                document.getElementById("first").hidden = true
+                document.getElementById("next").hidden = true
+                document.getElementById("last").hidden = true
+            }
+
+            if (data.pageable.pageNumber + 1 === data.totalPages) {
+                document.getElementById("next").hidden = true
+                document.getElementById("last").hidden = true
+            }
         }
     })
 }
 showList();
+
+function findByName(page) {
+    let q = $("#q").val();
+    $.ajax({
+        type : 'GET',
+        url : `http://localhost:8080/book?q=${q}&page=${page}`,
+        success : function (data) {
+            let books = data.content;
+            let content = '';
+            for (let i = 0; i < books.length; i++) {
+                content += `<tr>
+                    <th scope="row">${i+1}</th>
+        <td>${books[i].name}</td>
+        <td>${books[i].price}</td>
+        <td>${books[i].author}</td>
+        <td><img src="${'http://localhost:8080/image/' + books[i].image}" width="100px"></td>
+        <td>${books[i].category.name}</td>
+        <td><button onclick="deleteBook(${books[i].id})">Delete</button></td>
+        <td><button type="button" onclick="showEditForm(${books[i].id})" data-bs-toggle="modal" data-bs-target="#myModal1">Update</button></td>
+        </tr>`
+            }
+            $(`#list-book`).html(content);
+
+            let iconPage = `<button id="first" ><i class="fa-solid fa-backward-fast">First</i></button> 
+                <button  id="backup" onclick="findByName(${data.pageable.pageNumber} - 1)"><i class ="fa-solid fa-backward-step">Back</i></button>
+                      <span> Trang </span> <span>${data.pageable.pageNumber +1 }/ ${data.totalPages}</span>
+                      <button id="next" onclick="findByName(${data.pageable.pageNumber}+1)" ><i class="fa-solid fa-forward-step">Next</i></button>
+                        <button id="last" onclick="findByName(${data.totalPages} -1)"><i class="fa-solid fa-forward-fast">Last</i></button>`
+            $(`#iconPage`).html(iconPage);
+            if (data.pageable.pageNumber === 0) {
+                document.getElementById("backup").hidden = true
+                document.getElementById("first").hidden = true
+
+            }
+
+            if (data.pageable.pageNumber + 1 === data.totalPages) {
+                document.getElementById("next").hidden = true
+                document.getElementById("last").hidden = true
+            }
+        }
+    })
+    event.preventDefault();
+}
+
 
 function showCate(){
     $.ajax({
         type:"GET",
         url:"http://localhost:8080/book/cate",
         success: function (cate){
-            let content = "";
+            let content = `<option disabled>Choose...</option>`;
             for (let i = 0; i < cate.length; i++) {
                 content +=`<option value="${cate[i].id}">${cate[i].name}</option>`
             }
